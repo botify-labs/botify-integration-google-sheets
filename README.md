@@ -17,7 +17,7 @@ You are done
 ## Interface
 
 ### Get latest analyses
-The function `BotifyAPI.fetchLastAnalyses` display the latest analyses in a given tab name.
+The function `BotifyAPI.fetchLastAnalyses` prints the latest analyses in a tab.
 
 The following script displays the last 5 analyses in the tab `My analyses`.
 ```JS
@@ -31,7 +31,7 @@ BotifyAPI.fetchLastAnalyses(sheetName, apiToken, username, projectSlug, nbAnalys
 ```
 
 ### Aggregate Analysis URLs data;
-The function `BotifyAPI.fetchUrlsAggs` display the latest analyses in a given tab name.
+The function `BotifyAPI.fetchUrlsAggs` performs an aggregation on URLs of a given analyses and prints result in a tab.
 
 The following script compute compute the number of URLS and the average number of internal follow inlinks for compliant/not compliant active URLs. And display result in the tab 'Insights';
 ```JS
