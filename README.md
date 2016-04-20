@@ -2,6 +2,14 @@
 
 This repository contains the file included in the Google Sheets Botify Library.
 
+
+## Getting started with Google Sheets scripts
+
+A very good guide to start with Google Sheets scripts can be found at
+https://developers.google.com/apps-script/guides/sheets#get_started.
+The following expects the reader to know these basics.
+
+
 ## Install
 
 - Open a spreadsheet
