@@ -1,0 +1,65 @@
+# Botify SDK for Google Sheets
+
+This repository contains the file included in the Google Sheets Botify Library.
+
+## Install
+
+- Open a spreadsheet
+- Click on Tools -> Script Editor
+- Click on Resources -> Librairies
+- Enter `M24CMoOKf-eA42UYRa2yd_ArEMJ_QsI0X` in the find a library field
+- Click on Select
+- On version dropdown, select the latest version.
+- Click on Save
+You are done
+
+
+## Interface
+
+### Get latest analyses
+The function `BotifyAPI.fetchLastAnalyses` display the latest analyses in a given tab name.
+
+The following script displays the last 5 analyses in the tab `My analyses`.
+```JS
+var sheetName = 'My analyses';
+var apiToken = '5200a30fb41f179e6dadab3b4e2d40f83a0a8ccd';
+var username = 'adam_warlock';
+var projectSlug = 'demo-project';
+var nbAnalyses = 5;
+
+BotifyAPI.fetchLastAnalyses(sheetName, apiToken, username, projectSlug, nbAnalyses);
+```
+
+### Aggregate Analysis URLs data;
+The function `BotifyAPI.fetchUrlsAggs` display the latest analyses in a given tab name.
+
+The following script compute compute the number of URLS and the average number of internal follow inlinks for compliant/not compliant active URLs. And display result in the tab 'Insights';
+```JS
+var sheetName = 'Insights';
+var apiToken = '5200a30fb41f179e6dadab3b4e2d40f83a0a8ccd';
+var username = 'adam_warlock';
+var projectSlug = 'demo-project';
+var analysisSlug = '20160308';
+var request = {
+  "aggs": [
+    {
+      "group_by": [
+        "compliant.is_compliant"
+      ],
+      "metrics": [
+        "count",
+        {
+          "avg": "inlinks_internal.nb.follow.unique"
+        },
+      ]
+    }
+  ],
+  "filters": {
+    "field": "visits.organic.google.nb",
+    "predicate": "gt",
+    "value": 0
+  }
+};
+
+BotifyAPI.fetchUrlsAggs(sheetName, apiToken, username, projectSlug, analysisSlug, request);
+```
