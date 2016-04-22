@@ -54,7 +54,7 @@ function BOTIFY_ANALYSIS_GET_URLS_DETAIL(apiToken, username, projectSlug, analys
   for (var i = 0; i < chunks.length; i++) {
     var timeStart = new Date().getTime();
 
-    var apiurl = 'http://api.staging.botify.com/v1/analyses/' + username + '/' + projectSlug + '/' + analysisSlug + '/urls?size=' + BATCH_SIZE;
+    var apiurl = 'https://api.botify.com/v1/analyses/' + username + '/' + projectSlug + '/' + analysisSlug + '/urls?size=' + BATCH_SIZE;
     var options = {
       'method': 'post',
       'headers': {
