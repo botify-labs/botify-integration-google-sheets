@@ -4,20 +4,30 @@
  * @param {String} username Username of the project owner
  * @param {String} projectSlug Project's slug of the analysis
  * @param {String} analysisSlug Analysis's slug
- * @param {Range} urls Urls to get detail on
+ * @param {Range} urls Urls to get detail on (max 10,000)
  * @param {Range} fields Range of fields to fetch (ex A1:A4)
  * @param {Boolean} showHeaders Show Groups and Metrics headers (default to true)
  * @return {Array} The value of the fields
  * @customfunction
  */
 function BOTIFY_ANALYSIS_GET_URLS_DETAIL(apiToken, username, projectSlug, analysisSlug, urls, fields, showHeaders) {
+  var MAX_NB_URLS = 10000; // A google sheet macro must respond within 30 seconds, thus only a limited number of URLs can be retrieved.
+  var BATCH_SIZE = 500;
+  var MAX_CALL_FREQUENCY = (60 * 1000) / 100 + 100; // 100 calls by minute (100ms margin)
+  
   var result = [];
 
   // PREPARE INPUTS
   if (fields.map) { // fields is a range (only a range row is supported)
     fields = fields[0].filter(function (v) { return !!v }); // remove empty fields
+  } else {
+    fields = [fields];
   }
+
   if (urls.map) { // urls is a range (only a range column is supported)
+    if (urls.length > MAX_NB_URLS) {
+      throw new Error('The number of URLs can not exceed ' + MAX_NB_URLS);
+    }
     var tempUrls = [];
     for (var i = 0; i < urls.length; i++) {
       if (urls[i][0]) {
@@ -39,10 +49,12 @@ function BOTIFY_ANALYSIS_GET_URLS_DETAIL(apiToken, username, projectSlug, analys
   }
 
   // FETCHING API
-  var chunks = chunkArray(urls, 100);
+  var chunks = chunkArray(urls, BATCH_SIZE);
 
   for (var i = 0; i < chunks.length; i++) {
-    var apiurl = 'http://api.staging.botify.com/v1/analyses/' + username + '/' + projectSlug + '/' + analysisSlug + '/urls';
+    var timeStart = new Date().getTime();
+
+    var apiurl = 'http://api.staging.botify.com/v1/analyses/' + username + '/' + projectSlug + '/' + analysisSlug + '/urls?size=' + BATCH_SIZE;
     var options = {
       'method': 'post',
       'headers': {
@@ -61,14 +73,13 @@ function BOTIFY_ANALYSIS_GET_URLS_DETAIL(apiToken, username, projectSlug, analys
         }
       })
     };
-
     var response = JSON.parse(UrlFetchApp.fetch(apiurl, options).getContentText()).results;
 
     for (var j = 0; j < chunks[i].length; j++) {
       var url = chunks[i][j];
 
       // Find item (because results are not returned in the order we asked)
-      var item;
+      var item = null;
       for (var k = 0; k < response.length; k++) {
         if (response[k].url === url) {
           item = response[k];
@@ -90,8 +101,11 @@ function BOTIFY_ANALYSIS_GET_URLS_DETAIL(apiToken, username, projectSlug, analys
       result.push(row);
     }
  
-    if (i !== 0 && i % 5 === 0) { // Sleep to handle rate limit
-      Utilities.sleep(1000);
+    // Handle API rate limit
+    var timeEnd = new Date().getTime();
+    var sleepDuration = MAX_CALL_FREQUENCY - (timeEnd - timeStart);
+    if (sleepDuration > 0) {
+      Utilities.sleep(sleepDuration);
     }
   }
 
