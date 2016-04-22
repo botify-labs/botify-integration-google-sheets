@@ -4,14 +4,16 @@
  * @param {String} username Username of the project owner
  * @param {String} projectSlug Project's slug of the analysis
  * @param {String} analysisSlug Analysis's slug
- * @param {Range} urls Urls to get detail on (max 10,000)
+ * @param {Range} urls Urls to get detail on
  * @param {Range} fields Range of fields to fetch (ex A1:A4)
- * @param {Boolean} showHeaders Show Groups and Metrics headers (default to true)
+ * @param {Boolean} showHeaders Show Groups and Metrics headers (default: true)
  * @return {Array} The value of the fields
  * @customfunction
  */
 function BOTIFY_ANALYSIS_GET_URLS_DETAIL(apiToken, username, projectSlug, analysisSlug, urls, fields, showHeaders) {
-  var MAX_NB_URLS = 10000; // A google sheet macro must respond within 30 seconds, thus only a limited number of URLs can be retrieved.
+  var timeStartFunc = new Date().getTime();
+  
+  var MAX_EXECUTION_DURATION = 28000; // A google sheet macro must respond with in 30 seconds (with 2 seconds margin).
   var BATCH_SIZE = 500;
   var MAX_CALL_FREQUENCY = (60 * 1000) / 100 + 100; // 100 calls by minute (100ms margin)
   
@@ -25,9 +27,6 @@ function BOTIFY_ANALYSIS_GET_URLS_DETAIL(apiToken, username, projectSlug, analys
   }
 
   if (urls.map) { // urls is a range (only a range column is supported)
-    if (urls.length > MAX_NB_URLS) {
-      throw new Error('The number of URLs can not exceed ' + MAX_NB_URLS);
-    }
     var tempUrls = [];
     for (var i = 0; i < urls.length; i++) {
       if (urls[i][0]) {
@@ -99,6 +98,11 @@ function BOTIFY_ANALYSIS_GET_URLS_DETAIL(apiToken, username, projectSlug, analys
         }
       });
       result.push(row);
+    }
+    
+    var executionDuration = new Date().getTime() - timeStartFunc;
+    if (executionDuration > MAX_EXECUTION_DURATION) { // Return within MAX_EXECUTION_DURATION even if everything has not been fetched.
+      return result;
     }
  
     // Handle API rate limit
