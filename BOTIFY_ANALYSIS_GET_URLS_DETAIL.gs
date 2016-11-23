@@ -120,6 +120,9 @@ function get(obj, path){
   path = path.split('.');
   for (var i = 0; i < path.length; i++){
     obj = obj[path[i]];
+    if (typeof obj === "undefined") {
+      return null;
+    }
   };
   return obj;
 };
