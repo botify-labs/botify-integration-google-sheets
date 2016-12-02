@@ -12,11 +12,11 @@
  */
 function BOTIFY_ANALYSIS_GET_URLS_DETAIL(apiToken, username, projectSlug, analysisSlug, urls, fields, showHeaders) {
   var timeStartFunc = new Date().getTime();
-  
+
   var MAX_EXECUTION_DURATION = 28000; // A google sheet macro must respond with in 30 seconds (with 2 seconds margin).
   var BATCH_SIZE = 500;
   var MAX_CALL_FREQUENCY = (60 * 1000) / 100 + 100; // 100 calls by minute (100ms margin)
-  
+
   var result = [];
 
   // PREPARE INPUTS
@@ -59,6 +59,7 @@ function BOTIFY_ANALYSIS_GET_URLS_DETAIL(apiToken, username, projectSlug, analys
       'headers': {
         'Authorization': 'Token ' + apiToken,
         'Content-type': 'application/json',
+        'X-Botify-Client': "google-sheets",
       },
       'payload': JSON.stringify({
         'fields': fields.concat('url'),
@@ -85,7 +86,7 @@ function BOTIFY_ANALYSIS_GET_URLS_DETAIL(apiToken, username, projectSlug, analys
           break;
         }
       }
-      
+
       // Get requested fields
       var row = [];
       fields.forEach(function(field) {
@@ -99,12 +100,12 @@ function BOTIFY_ANALYSIS_GET_URLS_DETAIL(apiToken, username, projectSlug, analys
       });
       result.push(row);
     }
-    
+
     var executionDuration = new Date().getTime() - timeStartFunc;
     if (executionDuration > MAX_EXECUTION_DURATION) { // Return within MAX_EXECUTION_DURATION even if everything has not been fetched.
       return result;
     }
- 
+
     // Handle API rate limit
     var timeEnd = new Date().getTime();
     var sleepDuration = MAX_CALL_FREQUENCY - (timeEnd - timeStart);

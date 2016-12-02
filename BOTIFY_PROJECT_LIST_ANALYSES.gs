@@ -30,6 +30,7 @@ function BOTIFY_PROJECT_LIST_ANALYSES(apiToken, username, projectSlug, nbAnalyse
     'headers': {
       'Authorization': 'Token ' + apiToken,
       'Content-type': 'application/json',
+      'X-Botify-Client': "google-sheets",
     },
   };
 

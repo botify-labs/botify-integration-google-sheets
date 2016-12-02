@@ -5,7 +5,7 @@
  * @param {String} projectSlug Project's slug of the analysis
  * @param {String} analysisSlug Analysis's slug
  * @param {BQLAggsQuery} urlsAggsQuery BQL Aggregation Query to perform
- * @param {Boolean} showHeaders Show Groups and Metrics headers (default to true)
+ * @param {Boolean} showHeaders Show Groups and Metrics headers (default: true)
  * @return {Array} The result of the aggregation.
  * @customfunction
  */
@@ -54,6 +54,7 @@ function BOTIFY_ANALYSIS_AGGREGATE_URLS(apiToken, username, projectSlug, analysi
     'headers': {
       'Authorization': 'Token ' + apiToken,
       'Content-type': 'application/json',
+      'X-Botify-Client': "google-sheets",
     },
     'payload': JSON.stringify([urlsAggsQuery]),
   };
