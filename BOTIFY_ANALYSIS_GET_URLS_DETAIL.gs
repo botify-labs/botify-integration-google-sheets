@@ -125,7 +125,7 @@ function get(obj, path){
       return null;
     }
   };
-  return obj;
+  return JSON.stringify(obj);
 };
 
 function chunkArray(array, size) {
