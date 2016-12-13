@@ -92,7 +92,6 @@ function BOTIFY_ANALYSIS_GET_URLS_DETAIL(apiToken, username, projectSlug, analys
       fields.forEach(function(field) {
         if (item) {
           var val = get(item, field);
-          if (Array.isArray(val)) val = val[0]; // If multiple field, display only first item
           row.push(val);
         } else { // No result for the given URL
           row.push('NOT FOUND');
@@ -125,7 +124,7 @@ function get(obj, path){
       return null;
     }
   };
-  return JSON.stringify(obj);
+  return isObject(obj) ? JSON.stringify(obj) : obj;
 };
 
 function chunkArray(array, size) {
@@ -138,4 +137,9 @@ function chunkArray(array, size) {
     chunks[idx].push(array[i]);
   }
   return chunks;
+}
+
+function isObject(value) {
+  var type = typeof value;
+  return value != null && (type == 'object' || type == 'function');
 }

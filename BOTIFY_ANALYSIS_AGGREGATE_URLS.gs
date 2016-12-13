@@ -59,7 +59,6 @@ function BOTIFY_ANALYSIS_AGGREGATE_URLS(apiToken, username, projectSlug, analysi
     'payload': JSON.stringify([urlsAggsQuery]),
   };
   var response = JSON.parse(UrlFetchApp.fetch(url, options).getContentText());
-
   if(response[0].error) {
     throw new Error('ERROR ' + result[0].error.message);
   }
