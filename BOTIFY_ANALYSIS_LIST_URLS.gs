@@ -4,22 +4,19 @@
  * @param {String} username Username of the project owner
  * @param {String} projectSlug Project's slug of the analysis
  * @param {String} analysisSlug Analysis's slug
- * @param {Number} nbUrls Number of urls to retrieve (max: 1000, default 100)
  * @param {BQLFilter} filter Filter of apply on urls
  * @param {Range} fields Range of fields to fetch (ex A1:A4)
  * @param {BQLSort} sort Sort of apply on urls
+ * @param {Number} size Number of urls to retrieve (max: 1000, default 100)
+ * @param {Number} page Number of urls to retrieve (default 1)
  * @param {Boolean} displayTotal Display the number of urls matching the filter
  * @return {Array} The value of the fields
  * @customfunction
  */
-function BOTIFY_ANALYSIS_LIST_URLS(apiToken, username, projectSlug, analysisSlug, nbUrls, filter, fields, sort, displayTotal) {
+function BOTIFY_ANALYSIS_LIST_URLS(apiToken, username, projectSlug, analysisSlug, filter, fields, sort, size, page, displayTotal) {
   var result = [];
 
   // PREPARE INPUTS
-  if (typeof nbUrls === "undefined") {
-    nbUrls = 100;
-  }
-
   if (typeof filter === "undefined") {
     filter = {}; // no filter
   } else {
@@ -37,13 +34,21 @@ function BOTIFY_ANALYSIS_LIST_URLS(apiToken, username, projectSlug, analysisSlug
   } else {
     sort = JSON.parse(sort);
   }
+  
+  if (typeof size === "undefined") {
+    size = 100;
+  }
+
+  if (typeof page === "undefined") {
+    page = 1;
+  }
 
   if (typeof displayTotal === "undefined") {
     displayTotal = false;
   }
 
   // FETCHING API
-  var apiurl = 'https://api.botify.com/v1/analyses/' + username + '/' + projectSlug + '/' + analysisSlug + '/urls?size=' + nbUrls;
+  var apiurl = 'https://api.botify.com/v1/analyses/' + username + '/' + projectSlug + '/' + analysisSlug + '/urls?page=' + page + '&size=' + size;
   var options = {
     'method': 'post',
     'headers': {
