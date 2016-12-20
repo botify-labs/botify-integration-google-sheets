@@ -78,6 +78,8 @@ function BOTIFY_ANALYSIS_LIST_URLS(apiToken, username, projectSlug, analysisSlug
     });
     result.push(row);
   });
+  
+  if (!result.length) return "No result";
 
   return result;
 }
