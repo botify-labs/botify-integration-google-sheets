@@ -64,6 +64,7 @@ function BOTIFY_PROJECT_AGGREGATE_URLS(apiToken, username, projectSlug, urlsAggs
 
   // APPEND ROW RESULTS
   var rowIds = [];
+  responses[0].reverse();
   responses[0].forEach(function(response) {
     // 1 reponse by analysis
     var colIdx = result[0].push(response.analysis_slug) - 1; // Add analysis slug in first column
