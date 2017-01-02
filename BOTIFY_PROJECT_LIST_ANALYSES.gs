@@ -4,27 +4,33 @@
  * @param {String} username Username of the project owner
  * @param {String} projectSlug Project's slug
  * @param {Number} nbAnalyses Number of analyses to get
+ * @param {String?} statusFilter [Optional] For instance, "success" to filter on successfully finished analyses
  * @return {Array} The list of analyses.
  * @customfunction
  */
-function BOTIFY_PROJECT_LIST_ANALYSES(apiToken, username, projectSlug, nbAnalyses) {
+function BOTIFY_PROJECT_LIST_ANALYSES(apiToken, username, projectSlug, nbAnalyses, statusFilter) {
   var result = [];
 
   // INSERT HEADERS
   result.push([
     'slug',
     'name',
-    'start URL',
     'status',
     'nbUrls',
     'report url',
   ]);
 
   // FETCHING API
-  var url = 'https://api.botify.com/v1/analyses/' + username + '/' + projectSlug;
+  var queryParams = [];
   if (nbAnalyses) {
-    url += '?size=' + nbAnalyses;
+    queryParams.push('size=' + nbAnalyses);
   }
+  if (statusFilter) {
+    queryParams.push('status=' + statusFilter);
+  }
+  
+  var qs = queryParams.length > 0 ? ('?' + queryParams.join('&')) : '';
+  var url = 'https://api.botify.com/v1/analyses/' + username + '/' + projectSlug + qs;
   var options = {
     'method': 'get',
     'headers': {
@@ -46,7 +52,6 @@ function BOTIFY_PROJECT_LIST_ANALYSES(apiToken, username, projectSlug, nbAnalyse
     result.push([
       analysis.slug,
       analysis.name,
-      analysis.config.start_urls[0],
       analysis.status,
       analysis.urls_done,
       analysis.url
