@@ -1,5 +1,5 @@
 /**
- * Return the result of the aggregation on URLs of a given analyses
+ * Return the result of an aggregation for latest project's analyses.
  * @param {String} apiToken Botify API token
  * @param {String} username Username of the project owner
  * @param {String} projectSlug Project's slug of the analysis
