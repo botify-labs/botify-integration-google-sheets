@@ -4,11 +4,15 @@
  * @param {String} username Username of the project owner
  * @param {String} projectSlug Project's slug
  * @param {Number} nbAnalyses Number of analyses to get
- * @param {String?} statusFilter [Optional] For instance, "success" to filter on successfully finished analyses
+ * @param {Boolean} onlySuccess [Optional] List only successfully finished analyses
  * @return {Array} The list of analyses.
  * @customfunction
  */
-function BOTIFY_PROJECT_LIST_ANALYSES(apiToken, username, projectSlug, nbAnalyses, statusFilter) {
+function BOTIFY_PROJECT_LIST_ANALYSES(apiToken, username, projectSlug, nbAnalyses, onlySuccess) {
+  if (typeof onlySuccess === "undefined") {
+    onlySuccess = false;
+  }
+ 
   var result = [];
 
   // INSERT HEADERS
@@ -25,8 +29,8 @@ function BOTIFY_PROJECT_LIST_ANALYSES(apiToken, username, projectSlug, nbAnalyse
   if (nbAnalyses) {
     queryParams.push('size=' + nbAnalyses);
   }
-  if (statusFilter) {
-    queryParams.push('status=' + statusFilter);
+  if (onlySuccess) {
+    queryParams.push('onlySuccess=true');
   }
   
   var qs = queryParams.length > 0 ? ('?' + queryParams.join('&')) : '';
@@ -36,7 +40,7 @@ function BOTIFY_PROJECT_LIST_ANALYSES(apiToken, username, projectSlug, nbAnalyse
     'headers': {
       'Authorization': 'Token ' + apiToken,
       'Content-type': 'application/json',
-      'X-Botify-Client': "google-sheets",
+      'X-Botify-Client': 'google-sheets',
     },
   };
 
