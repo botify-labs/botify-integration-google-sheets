@@ -30,7 +30,7 @@ function BOTIFY_PROJECT_LIST_ANALYSES(apiToken, username, projectSlug, nbAnalyse
     queryParams.push('size=' + nbAnalyses);
   }
   if (onlySuccess) {
-    queryParams.push('onlySuccess=true');
+    queryParams.push('only_success=true');
   }
   
   var qs = queryParams.length > 0 ? ('?' + queryParams.join('&')) : '';
