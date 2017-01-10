@@ -16,7 +16,7 @@ function BOTIFY_PROJECT_AGGREGATE_URLS(apiToken, username, projectSlug, urlsAggs
   if (urlsAggsQuery.aggs.length > 1) {
     throw new Error('ERROR: you cannot define more than 1 aggregation');
   }
-  var requestAgg = urlsAggsQuery.aggs[0];
+  var requestAgg = urlsAggsQuery.aggs[0] || {};
   if (requestAgg.group_by && requestAgg.metrics && requestAgg.metrics.length > 1) {
     throw new Error('ERROR: you can define only one metrics with groupbys');
   }
@@ -61,6 +61,8 @@ function BOTIFY_PROJECT_AGGREGATE_URLS(apiToken, username, projectSlug, urlsAggs
       result[1] = ['count'];
     }
   }
+    
+  if (!responses[0]) return result;
 
   // APPEND ROW RESULTS
   var rowIds = [];
@@ -68,7 +70,7 @@ function BOTIFY_PROJECT_AGGREGATE_URLS(apiToken, username, projectSlug, urlsAggs
   responses[0].forEach(function(response) {
     // 1 reponse by analysis
     var colIdx = result[0].push(response.analysis_slug) - 1; // Add analysis slug in first column
-    var groups = response.data.aggs[0].groups || response.data.aggs;
+    var groups = (response.data.aggs[0] && response.data.aggs[0].groups) || response.data.aggs;
     groups.forEach(function(resultGroup) { // For each group by combinaison
       // Add group keys
       if (resultGroup.key) {
