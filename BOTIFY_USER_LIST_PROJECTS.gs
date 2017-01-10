@@ -1,3 +1,11 @@
+/**
+ * Return the projects of a user
+ * @param {String} apiToken Botify API token
+ * @param {String} username Username of the project owner
+ * @param {Number} nbProjects Number of projects to get
+ * @return {Array} The list of projects.
+ * @customfunction
+ */
 function BOTIFY_USER_LIST_PROJECTS(apiToken, username, nbProjects) {
   var result = [];
 
