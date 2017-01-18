@@ -96,7 +96,7 @@ function BOTIFY_PROJECT_AGGREGATE_URLS(apiToken, username, projectSlug, urlsAggs
         result[rowIdx][colIdx] = resultGroup.metrics[0];
       } else {
         resultGroup.metrics.forEach(function(metric, i) {
-          result[i + 1].push(metric);
+          result[i + 1][colIdx] = metric;
         });
       };
     });
