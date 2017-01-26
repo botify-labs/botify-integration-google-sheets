@@ -4,11 +4,18 @@
  * @param {String} username Username of the project owner
  * @param {String} projectSlug Project's slug of the analysis
  * @param {BQLAggsQuery} urlsAggsQuery BQL Aggregation Query to perform
- * @param {Number} nbAnalyses Number of analyses to get
+ * @param {Number} nbAnalyses [Optional] Number of analyses to get (default: 5)
  * @return {Array} The result of the aggregation.
  * @customfunction
  */
 function BOTIFY_PROJECT_AGGREGATE_URLS(apiToken, username, projectSlug, urlsAggsQuery, nbAnalyses) {
+  // PARAMS CHECKING
+  if (!apiToken) throw new Error("API Token is missing in parameters");
+  if (!username) throw new Error("username is missing in parameters");
+  if (!projectSlug) throw new Error("projectSlug is missing in parameters");
+  if (!urlsAggsQuery) throw new Error("urlsAggsQuery is missing in parameters");
+  if (typeof nbAnalyses === "undefined") nbAnalyses = 5;
+
   var result = [[]];
 
   // TEST urlsAggsQuery
@@ -61,7 +68,7 @@ function BOTIFY_PROJECT_AGGREGATE_URLS(apiToken, username, projectSlug, urlsAggs
       result[1] = ['count'];
     }
   }
-    
+
   if (!responses[0]) return result;
 
   // APPEND ROW RESULTS

@@ -3,16 +3,19 @@
  * @param {String} apiToken Botify API token
  * @param {String} username Username of the project owner
  * @param {String} projectSlug Project's slug
- * @param {Number} nbAnalyses Number of analyses to get
- * @param {Boolean} onlySuccess [Optional] List only successfully finished analyses
+ * @param {Number} nbAnalyses [Optional] Number of analyses to get (default: 20)
+ * @param {Boolean} onlySuccess [Optional] List only successfully finished analyses (default: true)
  * @return {Array} The list of analyses.
  * @customfunction
  */
 function BOTIFY_PROJECT_LIST_ANALYSES(apiToken, username, projectSlug, nbAnalyses, onlySuccess) {
-  if (typeof onlySuccess === "undefined") {
-    onlySuccess = false;
-  }
- 
+  // PARAMS CHECKING
+  if (!apiToken) throw new Error("API Token is missing in parameters");
+  if (!username) throw new Error("username is missing in parameters");
+  if (!projectSlug) throw new Error("projectSlug is missing in parameters");
+  if (typeof nbAnalyses === "undefined") nbAnalyses = 20;
+  if (typeof onlySuccess === "undefined") onlySuccess = true;
+
   var result = [];
 
   // INSERT HEADERS
@@ -32,7 +35,7 @@ function BOTIFY_PROJECT_LIST_ANALYSES(apiToken, username, projectSlug, nbAnalyse
   if (onlySuccess) {
     queryParams.push('only_success=true');
   }
-  
+
   var qs = queryParams.length > 0 ? ('?' + queryParams.join('&')) : '';
   var url = 'https://api.botify.com/v1/analyses/' + username + '/' + projectSlug + qs;
   var options = {

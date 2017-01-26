@@ -5,17 +5,21 @@
  * @param {String} projectSlug Project's slug of the analysis
  * @param {String} analysisSlug Analysis's slug
  * @param {BQLAggsQuery} urlsAggsQuery BQL Aggregation Query to perform
- * @param {Boolean} showHeaders Show Groups and Metrics headers (default: true)
+ * @param {Boolean} showHeaders [Optional] Show Groups and Metrics headers (default: true)
  * @return {Array} The result of the aggregation.
  * @customfunction
  */
 function BOTIFY_ANALYSIS_AGGREGATE_URLS(apiToken, username, projectSlug, analysisSlug, urlsAggsQuery, showHeaders) {
-  var result = [];
+  // PARAMS CHECKING
+  if (!apiToken) throw new Error("API Token is missing in parameters");
+  if (!username) throw new Error("username is missing in parameters");
+  if (!projectSlug) throw new Error("projectSlug is missing in parameters");
+  if (!analysisSlug) throw new Error("analysisSlug is missing in parameters");
+  if (!urlsAggsQuery) throw new Error("urlsAggsQuery is missing in parameters");
+  if (typeof showHeaders === "undefined") showHeaders = true;
 
+  var result = [];
   urlsAggsQuery = JSON.parse(urlsAggsQuery);
-  if (typeof showHeaders === "undefined") {
-    showHeaders = true;
-  }
 
   // INSERT HEADERS
   if (showHeaders) {
@@ -54,7 +58,7 @@ function BOTIFY_ANALYSIS_AGGREGATE_URLS(apiToken, username, projectSlug, analysi
     'headers': {
       'Authorization': 'Token ' + apiToken,
       'Content-type': 'application/json',
-      'X-Botify-Client': "google-sheets",
+      'X-Botify-Client': 'google-sheets',
     },
     'payload': JSON.stringify([urlsAggsQuery]),
   };

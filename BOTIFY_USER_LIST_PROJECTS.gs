@@ -2,11 +2,16 @@
  * Return the projects of a user
  * @param {String} apiToken Botify API token
  * @param {String} username Username of the project owner
- * @param {Number} nbProjects Number of projects to get
+ * @param {Number} nbProjects [Optional] Number of projects to get (default: 30)
  * @return {Array} The list of projects.
  * @customfunction
  */
 function BOTIFY_USER_LIST_PROJECTS(apiToken, username, nbProjects) {
+  // PARAMS CHECKING
+  if (!apiToken) throw new Error("API Token is missing in parameters");
+  if (!username) throw new Error("username is missing in parameters");
+  if (typeof nbProjects === "undefined") nbAnalyses = 30;
+
   var result = [];
 
   // INSERT HEADERS
@@ -23,7 +28,7 @@ function BOTIFY_USER_LIST_PROJECTS(apiToken, username, nbProjects) {
   if (nbProjects) {
     queryParams.push('size=' + nbProjects);
   }
-  
+
   var qs = queryParams.length > 0 ? ('?' + queryParams.join('&')) : '';
   var url = 'https://api.botify.com/v1/projects/' + username + qs;
   var options = {

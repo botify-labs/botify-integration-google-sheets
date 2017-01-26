@@ -6,11 +6,20 @@
  * @param {String} analysisSlug Analysis's slug
  * @param {Range} urls Urls to get detail on
  * @param {Range} fields Range of fields to fetch (ex A1:A4)
- * @param {Boolean} showHeaders Show Groups and Metrics headers (default: true)
+ * @param {Boolean} showHeaders [Optional] Show Groups and Metrics headers (default: true)
  * @return {Array} The value of the fields
  * @customfunction
  */
 function BOTIFY_ANALYSIS_GET_URLS_DETAIL(apiToken, username, projectSlug, analysisSlug, urls, fields, showHeaders) {
+  // PARAMS CHECKING
+  if (!apiToken) throw new Error("API Token is missing in parameters");
+  if (!username) throw new Error("username is missing in parameters");
+  if (!projectSlug) throw new Error("projectSlug is missing in parameters");
+  if (!analysisSlug) throw new Error("analysisSlug is missing in parameters");
+  if (!urls) throw new Error("urls list is missing in parameters");
+  if (!fields) throw new Error("fields list is missing in parameters");
+  if (typeof showHeaders === "undefined") showHeaders = true;
+
   var timeStartFunc = new Date().getTime();
 
   var MAX_EXECUTION_DURATION = 28000; // A google sheet macro must respond with in 30 seconds (with 2 seconds margin).
@@ -38,10 +47,6 @@ function BOTIFY_ANALYSIS_GET_URLS_DETAIL(apiToken, username, projectSlug, analys
     urls = [urls];
   }
 
-  if (typeof showHeaders === "undefined") {
-    showHeaders = true;
-  }
-
   // INSERT HEADERS
   if (showHeaders) {
     result.push(fields);
@@ -59,7 +64,7 @@ function BOTIFY_ANALYSIS_GET_URLS_DETAIL(apiToken, username, projectSlug, analys
       'headers': {
         'Authorization': 'Token ' + apiToken,
         'Content-type': 'application/json',
-        'X-Botify-Client': "google-sheets",
+        'X-Botify-Client': 'google-sheets',
       },
       'payload': JSON.stringify({
         'fields': fields.concat('url'),
