@@ -10,7 +10,7 @@ function BOTIFY_USER_LIST_PROJECTS(apiToken, username, nbProjects) {
   // PARAMS CHECKING
   if (!apiToken) throw new Error("API Token is missing in parameters");
   if (!username) throw new Error("username is missing in parameters");
-  if (typeof nbProjects === "undefined") nbAnalyses = 30;
+  if (typeof nbProjects === "undefined") nbProjects = 30;
 
   var result = [];
 
