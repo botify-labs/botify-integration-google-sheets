@@ -137,7 +137,7 @@ function chunkArray(array, size) {
   for (var i = 0; i < array.length; i++) {
     var idx = Math.floor(i/size);
     if (!chunks[idx]) {
-      chunks[idx] = [];
+      chunks[idx] = [];
     }
     chunks[idx].push(array[i]);
   }
