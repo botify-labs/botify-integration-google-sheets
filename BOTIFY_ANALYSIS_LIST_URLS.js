@@ -13,7 +13,18 @@
  * @return {Array} The value of the fields
  * @customfunction
  */
-function BOTIFY_ANALYSIS_LIST_URLS(apiToken, username, projectSlug, analysisSlug, fields, filter, sort, size, page, displayTotal) {
+function BOTIFY_ANALYSIS_LIST_URLS(
+  apiToken,
+  username,
+  projectSlug,
+  analysisSlug,
+  fields,
+  filter,
+  sort,
+  size,
+  page,
+  displayTotal
+) {
   // SUPPORT DEPRECATED format
   if (typeof fields === "string") {
     var tmp = filter;
@@ -30,7 +41,8 @@ function BOTIFY_ANALYSIS_LIST_URLS(apiToken, username, projectSlug, analysisSlug
   if (typeof filter === "undefined") filter = "{}";
   if (typeof sort === "undefined") sort = "[]";
   if (typeof size === "undefined") size = 100;
-  if (typeof size > 1000) throw new Error("size parameter must be between 1 and 1000");
+  if (typeof size > 1000)
+    throw new Error("size parameter must be between 1 and 1000");
   if (typeof page === "undefined") page = 1;
   if (typeof displayTotal === "undefined") displayTotal = false;
 
@@ -38,7 +50,9 @@ function BOTIFY_ANALYSIS_LIST_URLS(apiToken, username, projectSlug, analysisSlug
 
   // PREPARE INPUTS
   if (fields.map) {
-    fields = fields[0].filter(function (v) { return !!v }); // remove empty fields
+    fields = fields[0].filter(function(v) {
+      return !!v;
+    }); // remove empty fields
   } else {
     fields = [fields];
   }
@@ -46,25 +60,37 @@ function BOTIFY_ANALYSIS_LIST_URLS(apiToken, username, projectSlug, analysisSlug
   sort = JSON.parse(sort);
 
   // FETCHING API
-  var apiurl = 'https://api.botify.com/v1/analyses/' + username + '/' + projectSlug + '/' + analysisSlug + '/urls?page=' + page + '&size=' + size;
+  var apiurl =
+    "https://api.botify.com/v1/analyses/" +
+    username +
+    "/" +
+    projectSlug +
+    "/" +
+    analysisSlug +
+    "/urls?page=" +
+    page +
+    "&size=" +
+    size;
   var options = {
-    'method': 'post',
-    'headers': {
-      'Authorization': 'Token ' + apiToken,
-      'Content-type': 'application/json',
-      'X-Botify-Client': 'google-sheets',
+    method: "post",
+    headers: {
+      Authorization: "Token " + apiToken,
+      "Content-type": "application/json",
+      "X-Botify-Client": "google-sheets"
     },
-    'payload': JSON.stringify({
-      'fields': fields,
-      'filters': filter,
-      'sort': sort,
-    }),
+    payload: JSON.stringify({
+      fields: fields,
+      filters: filter,
+      sort: sort
+    })
   };
 
-  var response = JSON.parse(UrlFetchApp.fetch(apiurl, options).getContentText());
+  var response = JSON.parse(
+    UrlFetchApp.fetch(apiurl, options).getContentText()
+  );
 
   if (displayTotal) {
-    result.push(['Total Urls', response.count]);
+    result.push(["Total Urls", response.count]);
   }
 
   response.results.forEach(function(item) {
@@ -82,18 +108,18 @@ function BOTIFY_ANALYSIS_LIST_URLS(apiToken, username, projectSlug, analysisSlug
   return result;
 }
 
-function get(obj, path){
-  path = path.split('.');
-  for (var i = 0; i < path.length; i++){
+function get(obj, path) {
+  path = path.split(".");
+  for (var i = 0; i < path.length; i++) {
     obj = obj[path[i]];
     if (typeof obj === "undefined") {
       return null;
     }
-  };
+  }
   return isObject(obj) ? JSON.stringify(obj) : obj;
-};
+}
 
 function isObject(value) {
   var type = typeof value;
-  return value != null && (type == 'object' || type == 'function');
+  return value != null && (type == "object" || type == "function");
 }

@@ -8,7 +8,13 @@
  * @return {Array} The list of analyses.
  * @customfunction
  */
-function BOTIFY_PROJECT_LIST_ANALYSES(apiToken, username, projectSlug, nbAnalyses, onlySuccess) {
+function BOTIFY_PROJECT_LIST_ANALYSES(
+  apiToken,
+  username,
+  projectSlug,
+  nbAnalyses,
+  onlySuccess
+) {
   // PARAMS CHECKING
   if (!apiToken) throw new Error("API Token is missing in parameters");
   if (!username) throw new Error("username is missing in parameters");
@@ -19,38 +25,33 @@ function BOTIFY_PROJECT_LIST_ANALYSES(apiToken, username, projectSlug, nbAnalyse
   var result = [];
 
   // INSERT HEADERS
-  result.push([
-    'slug',
-    'name',
-    'status',
-    'nbUrls',
-    'report url',
-  ]);
+  result.push(["slug", "name", "status", "nbUrls", "report url"]);
 
   // FETCHING API
   var queryParams = [];
   if (nbAnalyses) {
-    queryParams.push('size=' + nbAnalyses);
+    queryParams.push("size=" + nbAnalyses);
   }
   if (onlySuccess) {
-    queryParams.push('only_success=true');
+    queryParams.push("only_success=true");
   }
 
-  var qs = queryParams.length > 0 ? ('?' + queryParams.join('&')) : '';
-  var url = 'https://api.botify.com/v1/analyses/' + username + '/' + projectSlug + qs;
+  var qs = queryParams.length > 0 ? "?" + queryParams.join("&") : "";
+  var url =
+    "https://api.botify.com/v1/analyses/" + username + "/" + projectSlug + qs;
   var options = {
-    'method': 'get',
-    'headers': {
-      'Authorization': 'Token ' + apiToken,
-      'Content-type': 'application/json',
-      'X-Botify-Client': 'google-sheets',
-    },
+    method: "get",
+    headers: {
+      Authorization: "Token " + apiToken,
+      "Content-type": "application/json",
+      "X-Botify-Client": "google-sheets"
+    }
   };
 
   var response = JSON.parse(UrlFetchApp.fetch(url, options).getContentText());
 
-  if(response.error) {
-    throw new Error('ERROR ' + response.error.message);
+  if (response.error) {
+    throw new Error("ERROR " + response.error.message);
   }
 
   // APPEND ROW RESULTS

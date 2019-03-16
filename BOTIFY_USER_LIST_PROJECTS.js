@@ -16,34 +16,34 @@ function BOTIFY_USER_LIST_PROJECTS(apiToken, username, nbProjects) {
 
   // INSERT HEADERS
   result.push([
-    'Slug',
-    'Name',
-    'Last Analysis Slug',
-    'Last Analysis Date',
-    'Last Analysis URL',
+    "Slug",
+    "Name",
+    "Last Analysis Slug",
+    "Last Analysis Date",
+    "Last Analysis URL"
   ]);
 
   // FETCHING API
   var queryParams = [];
   if (nbProjects) {
-    queryParams.push('size=' + nbProjects);
+    queryParams.push("size=" + nbProjects);
   }
 
-  var qs = queryParams.length > 0 ? ('?' + queryParams.join('&')) : '';
-  var url = 'https://api.botify.com/v1/projects/' + username + qs;
+  var qs = queryParams.length > 0 ? "?" + queryParams.join("&") : "";
+  var url = "https://api.botify.com/v1/projects/" + username + qs;
   var options = {
-    'method': 'get',
-    'headers': {
-      'Authorization': 'Token ' + apiToken,
-      'Content-type': 'application/json',
-      'X-Botify-Client': 'google-sheets',
-    },
+    method: "get",
+    headers: {
+      Authorization: "Token " + apiToken,
+      "Content-type": "application/json",
+      "X-Botify-Client": "google-sheets"
+    }
   };
 
   var response = JSON.parse(UrlFetchApp.fetch(url, options).getContentText());
 
-  if(response.error) {
-    throw new Error('ERROR ' + response.error.message);
+  if (response.error) {
+    throw new Error("ERROR " + response.error.message);
   }
 
   // APPEND ROW RESULTS
@@ -54,8 +54,14 @@ function BOTIFY_USER_LIST_PROJECTS(apiToken, username, nbProjects) {
       project.slug,
       project.name,
       project.last_analysis.name,
-      project.last_analysis.name ? project.last_analysis.name.slice(0, 4) + '/' + project.last_analysis.name.slice(4, 6) + '/' + project.last_analysis.name.slice(6, 8) : '',
-      project.last_analysis.url,
+      project.last_analysis.name
+        ? project.last_analysis.name.slice(0, 4) +
+          "/" +
+          project.last_analysis.name.slice(4, 6) +
+          "/" +
+          project.last_analysis.name.slice(6, 8)
+        : "",
+      project.last_analysis.url
     ]);
   });
 
