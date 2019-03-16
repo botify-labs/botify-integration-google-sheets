@@ -2,7 +2,7 @@
   "name": "botify-integration-google-sheets",
   "version": "1.0.0",
   "description": "Google Sheets Add-on for connecting to the Botify API.",
-  "main": "index.gs",
+  "main": "src/index.gs",
   "repository": "git@github.com:botify-labs/botify-integration-google-sheets.git",
   "author": "Botify",
   "private": true,
