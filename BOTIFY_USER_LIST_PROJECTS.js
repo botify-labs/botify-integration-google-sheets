@@ -1,14 +1,32 @@
 /**
  * Return the projects of a user
- * @param {String} apiToken Botify API token
  * @param {String} username Username of the project owner
  * @param {Number} nbProjects [Optional] Number of projects to get (default: 30)
  * @return {Array} The list of projects.
  * @customfunction
  */
-function BOTIFY_USER_LIST_PROJECTS(apiToken, username, nbProjects) {
+function BOTIFY_USER_LIST_PROJECTS(username, nbProjects) {
+  var apiToken = getTokenFromProperties();
+  // Support old token format
+  // Old signature was BOTIFY_USER_LIST_PROJECTS(apiToken, username, (nbProjects))
+  if (
+    // If the user has given a token as the first argument, then the format is the old signature
+    isToken(arguments[0])
+  ) {
+    // Only override the token if not present
+    if (!apiToken) {
+      apiToken = arguments[0];
+    }
+    // Override parameters in any case so they are correct
+    username = arguments[1];
+    nbProjects = arguments[2];
+  }
+
   // PARAMS CHECKING
-  if (!apiToken) throw new Error("API Token is missing in parameters");
+  if (!apiToken)
+    throw new Error(
+      "API Token is missing in the Addon configuration. Click on the Botify Addon item in the menu to add your token."
+    );
   if (!username) throw new Error("username is missing in parameters");
   if (typeof nbProjects === "undefined") nbProjects = 30;
 

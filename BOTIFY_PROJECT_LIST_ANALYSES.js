@@ -1,6 +1,5 @@
 /**
  * Return the latest analyses of a given project.
- * @param {String} apiToken Botify API token
  * @param {String} username Username of the project owner
  * @param {String} projectSlug Project's slug
  * @param {Number} nbAnalyses [Optional] Number of analyses to get (default: 20)
@@ -9,14 +8,34 @@
  * @customfunction
  */
 function BOTIFY_PROJECT_LIST_ANALYSES(
-  apiToken,
   username,
   projectSlug,
   nbAnalyses,
   onlySuccess
 ) {
+  var apiToken = getTokenFromProperties();
+  // Support old token format
+  // Old signature was BOTIFY_PROJECT_LIST_ANALYSES(apiToken, username, projectSlug, (nbAnalyses), (onlySuccess))
+  if (
+    // If the user has given a token as the first argument, then the format is the old signature
+    isToken(arguments[0])
+  ) {
+    // Only override the token if not present
+    if (!apiToken) {
+      apiToken = arguments[0];
+    }
+    // Override parameters in any case so they are correct
+    username = arguments[1];
+    projectSlug = arguments[2];
+    nbAnalyses = arguments[3];
+    onlySuccess = arguments[4];
+  }
+
   // PARAMS CHECKING
-  if (!apiToken) throw new Error("API Token is missing in parameters");
+  if (!apiToken)
+    throw new Error(
+      "API Token is missing in the Addon configuration. Click on the Botify Addon item in the menu to add your token."
+    );
   if (!username) throw new Error("username is missing in parameters");
   if (!projectSlug) throw new Error("projectSlug is missing in parameters");
   if (typeof nbAnalyses === "undefined") nbAnalyses = 20;

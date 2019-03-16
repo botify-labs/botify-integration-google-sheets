@@ -1,6 +1,5 @@
 /**
  * Return the result of an aggregation for latest project's analyses.
- * @param {String} apiToken Botify API token
  * @param {String} username Username of the project owner
  * @param {String} projectSlug Project's slug of the analysis
  * @param {BQLAggsQuery} urlsAggsQuery BQL Aggregation Query to perform
@@ -9,14 +8,34 @@
  * @customfunction
  */
 function BOTIFY_PROJECT_AGGREGATE_URLS(
-  apiToken,
   username,
   projectSlug,
   urlsAggsQuery,
   nbAnalyses
 ) {
+  var apiToken = getTokenFromProperties();
+  // Support old token format
+  // Old signature was BOTIFY_PROJECT_AGGREGATE_URLS(apiToken, username, projectSlug, urlsAggsQuery, (nbAnalyses))
+  if (
+    // If the user has given a token as the first argument, then the format is the old signature
+    isToken(arguments[0])
+  ) {
+    // Only override the token if not present
+    if (!apiToken) {
+      apiToken = arguments[0];
+    }
+    // Override parameters in any case so they are correct
+    username = arguments[1];
+    projectSlug = arguments[2];
+    urlsAggsQuery = arguments[3];
+    nbAnalyses = arguments[4];
+  }
+
   // PARAMS CHECKING
-  if (!apiToken) throw new Error("API Token is missing in parameters");
+  if (!apiToken)
+    throw new Error(
+      "API Token is missing in the Addon configuration. Click on the Botify Addon item in the menu to add your token."
+    );
   if (!username) throw new Error("username is missing in parameters");
   if (!projectSlug) throw new Error("projectSlug is missing in parameters");
   if (!urlsAggsQuery) throw new Error("urlsAggsQuery is missing in parameters");

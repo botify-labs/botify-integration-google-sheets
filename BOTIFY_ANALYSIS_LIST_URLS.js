@@ -1,6 +1,5 @@
 /**
  * Return the requested fields of a given URL
- * @param {String} apiToken Botify API token
  * @param {String} username Username of the project owner
  * @param {String} projectSlug Project's slug of the analysis
  * @param {String} analysisSlug Analysis's slug
@@ -14,7 +13,6 @@
  * @customfunction
  */
 function BOTIFY_ANALYSIS_LIST_URLS(
-  apiToken,
   username,
   projectSlug,
   analysisSlug,
@@ -25,15 +23,34 @@ function BOTIFY_ANALYSIS_LIST_URLS(
   page,
   displayTotal
 ) {
-  // SUPPORT DEPRECATED format
-  if (typeof fields === "string") {
-    var tmp = filter;
-    filter = fields;
-    fields = tmp;
+  var apiToken = getTokenFromProperties();
+  // Support old token format
+  // Old signature was BOTIFY_ANALYSIS_LIST_URLS(apiToken, username, projectSlug, analysisSlug, fields, (filter), (sort), (size), (page), (displayTotal))
+  if (
+    // If the user has given a token as the first argument, then the format is the old signature
+    isToken(arguments[0])
+  ) {
+    // Only override the token if not present
+    if (!apiToken) {
+      apiToken = arguments[0];
+    }
+    // Override parameters in any case so they are correct
+    username = arguments[1];
+    projectSlug = arguments[2];
+    analysisSlug = arguments[3];
+    fields = arguments[4];
+    filter = arguments[5];
+    sort = arguments[6];
+    size = arguments[7];
+    page = arguments[8];
+    displayTotal = arguments[9];
   }
 
   // PARAMS CHECKING
-  if (!apiToken) throw new Error("API Token is missing in parameters");
+  if (!apiToken)
+    throw new Error(
+      "API Token is missing in the Addon configuration. Click on the Botify Addon item in the menu to add your token."
+    );
   if (!username) throw new Error("username is missing in parameters");
   if (!projectSlug) throw new Error("projectSlug is missing in parameters");
   if (!analysisSlug) throw new Error("analysisSlug is missing in parameters");

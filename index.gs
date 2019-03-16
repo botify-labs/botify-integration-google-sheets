@@ -2,6 +2,14 @@ function getTokenFromProperties() {
   return PropertiesService.getUserProperties().getProperty("BOTIFY_API_TOKEN");
 }
 
+/**
+ * Returns true if the provided argument seems to be an API token (40-digit hexadecimal string)
+ * @param str
+ */
+function isToken(str) {
+  return /^[0-9a-fA-F]{40}$/.test(str);
+}
+
 function init() {
   SpreadsheetApp.getUi()
     .createMenu("Botify Addon")
