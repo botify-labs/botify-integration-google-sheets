@@ -1,0 +1,21 @@
+{
+  "name": "botify-integration-google-sheets",
+  "version": "1.0.0",
+  "description": "Google Sheets Add-on for connecting to the Botify API.",
+  "main": "src/index.gs",
+  "repository": "git@github.com:botify-labs/botify-integration-google-sheets.git",
+  "author": "Botify",
+  "private": true,
+  "scripts": {
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@google/clasp": "^2.0.1"
+  },
+  "devDependencies": {
+    "eslint": "^5.15.2",
+    "eslint-plugin-googleappsscript": "^1.0.1",
+    "eslint-plugin-prettier": "^2.6.2",
+    "prettier": "^1.13.7"
+  }
+}
