@@ -115,6 +115,7 @@ function BOTIFY_PROJECT_AGGREGATE_URLS(
     // 1 reponse by analysis
     var colIdx = result[0].push(response.analysis_slug) - 1; // Add analysis slug in first column
     var groups =
+      (response.data === undefined && []) ||
       (response.data.aggs[0] && response.data.aggs[0].groups) ||
       response.data.aggs;
     groups.forEach(function(resultGroup) {
