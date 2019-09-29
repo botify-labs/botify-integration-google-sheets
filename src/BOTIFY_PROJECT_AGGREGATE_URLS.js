@@ -83,9 +83,9 @@ function BOTIFY_PROJECT_AGGREGATE_URLS(
 
   // INSERT HEADERS
   if (requestAgg.group_by) {
-    requestAgg.group_by.forEach(function(group) {
+    requestAgg.group_by.forEach(function (group) {
       if (group.range) {
-        // Range group bY
+        // Range group by
         result[0].push(group.range.field);
       } else {
         // Simple group by
@@ -95,7 +95,7 @@ function BOTIFY_PROJECT_AGGREGATE_URLS(
   } else {
     result[0].push("Metric");
     if (requestAgg.metrics) {
-      requestAgg.metrics.forEach(function(metric, i) {
+      requestAgg.metrics.forEach(function (metric, i) {
         if (typeof metric === "string") {
           result[i + 1] = [metric.toUpperCase()];
         } else {
@@ -115,19 +115,19 @@ function BOTIFY_PROJECT_AGGREGATE_URLS(
   // APPEND ROW RESULTS
   var rowIds = [];
   responses[0].reverse();
-  responses[0].forEach(function(response) {
-    // 1 reponse by analysis
+  responses[0].forEach(function (response) {
+    // 1 response per analysis
     var colIdx = result[0].push(response.analysis_slug) - 1; // Add analysis slug in first column
     var groups =
       (response.data === undefined && []) ||
       (response.data.aggs[0] && response.data.aggs[0].groups) ||
       response.data.aggs;
-    groups.forEach(function(resultGroup) {
-      // For each group by combinaison
+    groups.forEach(function (resultGroup) {
+      // For each group by combination
       // Add group keys
       if (resultGroup.key) {
         var rowId = [];
-        resultGroup.key.forEach(function(key, i) {
+        resultGroup.key.forEach(function (key) {
           if (
             typeof key.from !== "undefined" ||
             typeof key.to !== "undefined"
@@ -152,7 +152,7 @@ function BOTIFY_PROJECT_AGGREGATE_URLS(
         }
         result[rowIdx][colIdx] = resultGroup.metrics[0];
       } else {
-        resultGroup.metrics.forEach(function(metric, i) {
+        resultGroup.metrics.forEach(function (metric, i) {
           result[i + 1][colIdx] = metric;
         });
       }
