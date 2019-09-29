@@ -4,6 +4,7 @@
  * @param {String} projectSlug Project's slug of the analysis
  * @param {BQLAggsQuery} urlsAggsQuery BQL Aggregation Query to perform
  * @param {Number} nbAnalyses [Optional] Number of analyses to get (default: 5)
+ * @param {Boolean} errors [Optional] Return error messages (default: false)
  * @return {Array} The result of the aggregation.
  * @customfunction
  */
@@ -11,7 +12,8 @@ function BOTIFY_PROJECT_AGGREGATE_URLS(
   username,
   projectSlug,
   urlsAggsQuery,
-  nbAnalyses
+  nbAnalyses,
+  errors
 ) {
   var apiToken = getTokenFromProperties();
   // Support old token format
@@ -29,6 +31,7 @@ function BOTIFY_PROJECT_AGGREGATE_URLS(
     projectSlug = arguments[2];
     urlsAggsQuery = arguments[3];
     nbAnalyses = arguments[4];
+    errors = arguments[5]
   }
 
   // PARAMS CHECKING
@@ -107,6 +110,7 @@ function BOTIFY_PROJECT_AGGREGATE_URLS(
   }
 
   if (!responses[0]) return result;
+  var start = result[0].length;
 
   // APPEND ROW RESULTS
   var rowIds = [];
@@ -164,5 +168,20 @@ function BOTIFY_PROJECT_AGGREGATE_URLS(
     }
   }
 
+  // Append errors
+  if (errors) {
+    var errors_list = [];
+    errors_list.length = result[0].length;
+    var have_errors = false;
+    responses[0].forEach(function (response, i) {
+      if (response.error) {
+        have_errors = true;
+        errors_list[start + i] = response.error.message
+      }
+    });
+    if (have_errors) {
+      result.push(errors_list)
+    }
+  }
   return result;
 }
