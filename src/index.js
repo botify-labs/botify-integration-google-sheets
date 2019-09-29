@@ -47,7 +47,7 @@ function promptForApiToken() {
 
   var button = result.getSelectedButton();
   var newToken = result.getResponseText();
-  if (button == ui.Button.OK) {
+  if (button === ui.Button.OK) {
     var properties = PropertiesService.getUserProperties();
     properties.setProperty("BOTIFY_API_TOKEN", newToken);
     if (!!newToken) {
@@ -60,7 +60,7 @@ function promptForApiToken() {
       ui.alert("Your Botify API Token was removed.");
     }
   } else if (
-    (button == ui.Button.CANCEL || button == ui.Button.CLOSE) &&
+    (button === ui.Button.CANCEL || button === ui.Button.CLOSE) &&
     !token
   ) {
     ui.alert(
