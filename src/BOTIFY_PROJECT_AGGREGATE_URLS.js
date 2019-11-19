@@ -154,8 +154,7 @@ function BOTIFY_PROJECT_AGGREGATE_URLS(
 
   // Append errors
   if (errors) {
-    var errors_list = []
-    errors_list.length = result[0].length
+    var errors_list = new Array(result[0].length)
     var have_errors = false
     responses[0].forEach(function (response, i) {
       if (response.error) {
