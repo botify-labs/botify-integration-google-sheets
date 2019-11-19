@@ -111,7 +111,7 @@ function BOTIFY_PROJECT_AGGREGATE_URLS(
   }
 
   if (!responses[0]) return result
-  var start = result[0].length
+  var start = result[0].length  // Index of the first analysis result
 
   // APPEND ROW RESULTS
   var rowIds = []
@@ -159,7 +159,7 @@ function BOTIFY_PROJECT_AGGREGATE_URLS(
     responses[0].forEach(function (response, i) {
       if (response.error) {
         have_errors = true
-        errors_list[start + i] = response.error.message
+        errors_list[start + i] = response.error.message  // in the corresponding analysis column
       }
     })
     if (have_errors) {
